@@ -2,7 +2,6 @@ package com.github.jdussouillez.qrfse;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.quarkus.runtime.annotations.RegisterForReflection;
 import jakarta.inject.Inject;
@@ -10,7 +9,6 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.util.Set;
@@ -40,14 +38,8 @@ public class EventResource {
 
     @ServerExceptionMapper
     public Response mapException(final EventNotFoundException ex) {
-        String json = null;
-        try {
-            json = jsonMapper.writeValueAsString(ex);
-        } catch (JsonProcessingException ex2) {
-        }
         return Response.status(Response.Status.NOT_FOUND)
-            .header(HttpHeaders.CONTENT_TYPE, "application/problem+json")
-            .entity(json)
+            .entity(ex)
             .build();
     }
 
